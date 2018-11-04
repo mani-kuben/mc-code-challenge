@@ -22,7 +22,7 @@ public class FindCityController {
         if (findCity.isConnected(origin, destination)) return "yes";
 
         return "no";
-        
+
     }
 
 }
