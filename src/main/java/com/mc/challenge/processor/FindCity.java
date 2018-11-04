@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,10 +18,13 @@ public class FindCity {
     private final String CLASS_NAME = FindCity.class.getName();
 
     Multimap<String, String> cityList;
+    TreeSet<String>  uniqueCityNames;
 
     Logger logger = Logger.getLogger(FindCity.class.getName());
 
     public FindCity(){
+
+        uniqueCityNames = new TreeSet<>();
 
         // for initial testing purposes.. to be removed and read from the file.
         cityList = ArrayListMultimap.create();
@@ -44,6 +48,11 @@ public class FindCity {
         cityList.put("Pickering", "Toronto");
         cityList.put("Victoria", "Ajax");
 
+        cityList.put("Honolulu", "Hilo");
+
+        uniqueCityNames.addAll(cityList.keySet());
+        uniqueCityNames.addAll(cityList.values());
+
     }
 
     // given 2 points, this method will check if they are connected or not.
@@ -54,16 +63,16 @@ public class FindCity {
 
         boolean result = false;
 
-        // check for invalid data
-        if ((StringUtils.isEmpty(origin) || StringUtils.isEmpty(dest)) || (StringUtils.isEmpty(origin) && StringUtils.isEmpty(dest)))
+        // TC#1 : check for invalid data-set
+        // TC#2 : origin and destination must exists
+        if ((StringUtils.isEmpty(origin) || StringUtils.isEmpty(dest)) || (StringUtils.isEmpty(origin) && StringUtils.isEmpty(dest))
+                || (!(uniqueCityNames.contains(origin)) || !uniqueCityNames.contains(dest))
+                || (!(uniqueCityNames.contains(origin)) && !uniqueCityNames.contains(dest)))
             return false;
 
-        // origin and destination needs to exists
-        //TODO: need to handle this scenario
 
-        // origin same as destination
-        if (origin.equals(dest) && cityList.containsKey(origin)) {
-
+        // TC#3 : origin same as destination
+        if (origin.equals(dest) && uniqueCityNames.contains(origin)) {
             logger.log(Level.INFO, "Origin {0} same as destination {1} " , new Object[] {origin, dest} );
             logger.log(Level.INFO, "Origin <" + origin );
             return true;
@@ -97,6 +106,11 @@ public class FindCity {
         return result;
     }
 
+    /*
+        This recursive method will find the indirect connections between the 2 points.
+
+        Using the full 'map' - it'll check if the input (direct points) match with the destination.
+     */
     private boolean findIndirectConnection(String origin, String dest, Collection<String> subList) {
 
         String METHOD_NAME = "findIndirectConnection";
