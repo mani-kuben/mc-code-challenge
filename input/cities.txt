@@ -1,17 +1,4 @@
-Ajax, Toronto
-Toronto, Oshawa
-Toronto, Oakville
-Ajax, Kingston
-Toronto, New York
-New York, Houston
-New York, San Jose
-San Jose, Dallas
-Oshawa, Ottawa
-Ottawa, Montreal
-Barrie, Scarborough
-Scarborough, Barrie
-Oshawa, Scarborough
-Scarborough, Oshawa
-Pickering, Toronto
-Victoria, Ajax
-Honolulu, Hilo
+Boston, New York
+Philadelphia, Newark
+Newark, Boston
+Trenton, Albany

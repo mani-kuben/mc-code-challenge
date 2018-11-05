@@ -18,6 +18,11 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * @author M.Kubendranathan
+ *
+ * This service class will execute DFS algorithm to find if 2 paths are connected with the given dataset.
+ */
 @Component
 public class FindConnectedCityServiceImpl implements FindConnectedCityService{
 
@@ -31,7 +36,10 @@ public class FindConnectedCityServiceImpl implements FindConnectedCityService{
     @Value("${code-challenge.file-name}")
     private String fileName;
 
-
+    /**
+     * init method - read csv FILE and initialize the Tree to be searched for
+     * @throws IOException
+     */
     @PostConstruct
     public void init() throws IOException {
 
@@ -72,13 +80,14 @@ public class FindConnectedCityServiceImpl implements FindConnectedCityService{
 
     }
 
-    /*****************
-        caching the data to ensure we don't process the same cities again. Current solution using simple provider..
-        Ideally, we would use a solution that can scale on a production system (ie: JSR107 supported options).
-    *********/
+    /**
+     *   caching the data to ensure we don't process the same cities again. Current solution using simple provider..
+     *   Ideally, we would use a solution that can scale on a production system (ie: JSR107 supported options).
+     *
+     *   given 2 points, this method will check if they are connected or not.
+    */
 
     @Cacheable("connectedCities")
-    // given 2 points, this method will check if they are connected or not.
     public boolean isConnected(String origin, String dest) {
 
         String METHOD_NAME = "isConnected";
@@ -119,8 +128,8 @@ public class FindConnectedCityServiceImpl implements FindConnectedCityService{
         return result;
     }
 
-    /*
-        This method uses Depth First Search to search through the nodes (recursively)
+    /**
+     *  This method uses Depth First Search to search through the nodes (recursively)
      */
     private boolean depthFirstSearch(String origin, String dest, Collection<String> directNodes) {
 

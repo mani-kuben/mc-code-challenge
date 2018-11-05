@@ -47,36 +47,21 @@ public class ChallengeApplicationTests {
     public void directConnectionsTest()  {
 
         // both cities are same and exists
-        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Toronto&city2=Toronto",String.class));
-
-        // both cities are different and exists directly connected
-        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Toronto&city2=New York",String.class));
-
-        // both cities exists but NOT connected
-        Assert.assertEquals("no",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Toronto&city2=Honolulu",String.class));
-
-        // both cities are different and exists direct
-        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Pickering&city2=Toronto",String.class));
+        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Boston&city2=New York",String.class));
 
     }
 
-    /*
+
     @Test
-    public void inDirectConnectionsTest() {
+    public void inDirectConnectionsTest_DFS_Search() {
 
-        // both cities are same and exists
-        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Toronto&city2=Toronto",String.class));
+        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Boston&city2=Newark",String.class));
 
-        // both cities are different and exists directly connected
-        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Toronto&city2=Toronto",String.class));
+        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Boston&city2=Philadelphia",String.class));
 
-        // both cities exists but NOT connected
-        Assert.assertEquals("no",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Toronto&city2=Honolulu",String.class));
-
-        // both cities are different and exists direct
-        Assert.assertEquals("yes",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Toronto&city2=Toronto",String.class));
+        Assert.assertEquals("no",restTemplate.getForObject("http://localhost:" + port + "/connected?city1=Philadelphia&city2=Albany",String.class));
 
     }
-    */
+
 
 }
