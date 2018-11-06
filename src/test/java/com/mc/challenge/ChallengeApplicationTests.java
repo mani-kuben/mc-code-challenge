@@ -1,5 +1,6 @@
 package com.mc.challenge;
 
+import com.mc.challenge.service.FindConnectedCityService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * @author M.Kubendranathan
+ *
+ * Spring Boot JUnit application class to check if 2 points are connected in a given map
+ */
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -24,6 +31,12 @@ public class ChallengeApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Autowired
+    FindConnectedCityService findConnectedCityService;
+
+    /**
+     *  This method will test the Controller method directly for all test scenarios - INVALID DATA SET
+     */
     @Test
     public void validateData() {
 
@@ -43,6 +56,9 @@ public class ChallengeApplicationTests {
     }
 
 
+    /**
+     *  This method will test the Controller method directly for all test scenarios - DIRECT connections between 2 pointers in a map
+     */
     @Test
     public void directConnectionsTest()  {
 
@@ -51,7 +67,9 @@ public class ChallengeApplicationTests {
 
     }
 
-
+    /**
+     *  This method will test the Controller method directly for all test scenarios - indirect connections between 2 pointers in a map
+     */
     @Test
     public void inDirectConnectionsTest_DFS_Search() {
 
@@ -64,4 +82,17 @@ public class ChallengeApplicationTests {
     }
 
 
+    /**
+     *  This method will test the Service method directly for all test scenarios
+     */
+    @Test
+    public void executeTestsForServiceClass(){
+
+        Assert.assertTrue(findConnectedCityService.isConnected("Boston", "New York"));
+        Assert.assertTrue(findConnectedCityService.isConnected("Boston", "Newark"));
+        Assert.assertTrue(findConnectedCityService.isConnected("Boston", "Philadelphia"));
+        Assert.assertFalse(findConnectedCityService.isConnected("Philadelphia", "Albany"));
+
+
+    }
 }

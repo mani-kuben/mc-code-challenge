@@ -21,24 +21,28 @@ import java.util.logging.Logger;
 /**
  * @author M.Kubendranathan
  *
- * This service class will execute DFS algorithm to find if 2 paths are connected with the given dataset.
+ * This service implementation class will execute DFS algorithm to find if 2 paths are connected with the given dataset.
  */
 @Component
 public class FindConnectedCityServiceImpl implements FindConnectedCityService{
 
     private final String CLASS_NAME = FindConnectedCityServiceImpl.class.getName();
 
+    // this parameter will hold the Map of the tree with all the connections
     private Multimap<String, String> cityList;
+
+    // This tree will hold all the unique pointers which will be used for data validation
     private TreeSet<String>  uniqueCityNames;
 
     private static final Logger logger = Logger.getLogger(FindConnectedCityServiceImpl.class.getName());
 
+    // input file
     @Value("${code-challenge.file-name}")
     private String fileName;
 
     /**
      * init method - read csv FILE and initialize the Tree to be searched for
-     * @throws IOException
+     * @throws IOException IOException is thrown
      */
     @PostConstruct
     public void init() throws IOException {
@@ -49,22 +53,24 @@ public class FindConnectedCityServiceImpl implements FindConnectedCityService{
         cityList = ArrayListMultimap.create();
         uniqueCityNames = new TreeSet<>();
 
+        // read the input file
         Reader reader = Files.newBufferedReader( Paths.get(new ClassPathResource(fileName).getPath()));
 
         CSVReader csvReader = new CSVReader(reader);
+
+        // read all data and store it in a temp list
         List<String[]> dataRead = csvReader.readAll();
 
         int numberOfRecordsRead = dataRead.size();
-        Iterator<String[]> itr = dataRead.iterator();
-        while (itr.hasNext()){
-            String [] city = itr.next();
-
+        for (String[] city : dataRead) {
             try {
-
+                // add both points to the main tree
                 cityList.put(city[0].trim(), city[1].trim());
+
+                // add reverse connections to the main tree (if A is connected to B, then B is also connected to A)
                 cityList.put(city[1].trim(), city[0].trim());
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 // ignorning any exceptions if specific records fails.
                 e.printStackTrace();
                 logger.log(Level.WARNING, "Failed processing city {0}", city);
@@ -72,6 +78,7 @@ public class FindConnectedCityServiceImpl implements FindConnectedCityService{
 
         }
 
+        // add all the city to the unique name list
         uniqueCityNames.addAll(cityList.keySet());
 
         logger.log(Level.INFO, "FindConnectedCityService init completed. Number of records read {0} ", new Object[] {numberOfRecordsRead});
@@ -137,17 +144,19 @@ public class FindConnectedCityServiceImpl implements FindConnectedCityService{
         logger.entering(CLASS_NAME, METHOD_NAME);
 
         boolean result = false;
+
         Iterator<String> itrDirectNodes = directNodes.iterator();
         String visited = origin;
 
         while (itrDirectNodes.hasNext()){
             origin = itrDirectNodes.next();
 
+            // pick the immediate nodes of the traversal and travel down the node until finding the match
             Map<String, Collection<String>> fullTree = cityList.asMap();
             Collection<String> directConnections = fullTree.get(origin);
 
             if (directConnections != null) {
-                // found the connection
+                // found the match - recurse out of the loop
                 if (directConnections.contains(dest)) return true;
 
                 // remove the visited nodes
